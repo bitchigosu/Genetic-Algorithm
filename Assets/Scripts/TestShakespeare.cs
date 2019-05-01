@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class TestShakespeare : MonoBehaviour
 {
     [Header("Genetic Algorithm")]
-    [SerializeField] string targetString = "010101";
+    [SerializeField] string targetString = "";
 	[SerializeField] string validCharacters = "01";
 	[SerializeField] int populationSize = 200;
 	[SerializeField] float mutationRate = 0.01f;
@@ -24,6 +24,7 @@ public class TestShakespeare : MonoBehaviour
 
 	private GeneticAlgorithm<char> ga;
 	private System.Random random;
+    string s;
 
     string MakeConfiguration(int numOfModules)
     {
@@ -72,7 +73,13 @@ public class TestShakespeare : MonoBehaviour
     string cfg(char[,] arr, int numOfModules)
     {
         StringBuilder configuration = new StringBuilder();
+        StringBuilder config1 = new StringBuilder();
         int count = 0;
+        foreach (var c in arr)
+        {
+            config1.Append(c);
+        }
+        s = config1.ToString();
         foreach (var c in arr)
         {
             configuration.Append(c);
@@ -83,7 +90,9 @@ public class TestShakespeare : MonoBehaviour
     }
     void Start()
 	{
-        targetText.text = MakeConfiguration(5);
+        targetText.text = MakeConfiguration(13);
+
+        targetString = s;
 
         if (string.IsNullOrEmpty(targetString))
 		{
