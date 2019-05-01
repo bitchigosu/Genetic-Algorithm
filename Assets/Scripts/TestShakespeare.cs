@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 public class TestShakespeare : MonoBehaviour
 {
-	[Header("Genetic Algorithm")]
-	[SerializeField] string targetString = "SWAGGG";
-	[SerializeField] string validCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,.|!#$%&/()=? ";
+    [Header("Genetic Algorithm")]
+    [SerializeField] string targetString = "010101";
+	[SerializeField] string validCharacters = "01";
 	[SerializeField] int populationSize = 200;
 	[SerializeField] float mutationRate = 0.01f;
 	[SerializeField] int elitism = 5;
@@ -25,11 +25,67 @@ public class TestShakespeare : MonoBehaviour
 	private GeneticAlgorithm<char> ga;
 	private System.Random random;
 
-	void Start()
-	{
-		targetText.text = targetString;
+    string MakeConfiguration(int numOfModules)
+    {
+        char[,] arr = new char[numOfModules, numOfModules];
+        for (int i = 0; i < numOfModules; i++)
+        {
+            for (int j = 0; j < numOfModules; j++)
+                arr[i, j] = '0';
+        }
 
-		if (string.IsNullOrEmpty(targetString))
+        Console.Write(cfg(arr, numOfModules));
+        Console.WriteLine();
+
+        int n = numOfModules;
+        int z = 1;
+        int halfN = numOfModules / 2;
+        arr[halfN, halfN] = '1';
+        n--;
+        while (n != 0)
+        {
+            arr[halfN - z, halfN] = '1';
+            n--;
+            if (n == 0)
+                return cfg(arr, numOfModules);
+
+            arr[halfN + z, halfN] = '1';
+            n--;
+            if (n == 0)
+                return cfg(arr, numOfModules);
+
+            arr[halfN, halfN + z] = '1';
+            n--;
+            if (n == 0)
+                return cfg(arr, numOfModules);
+
+            arr[halfN, halfN - z] = '1';
+            n--;
+            if (n == 0)
+                return cfg(arr, numOfModules);
+            z++;
+
+        }
+        return cfg(arr, numOfModules);
+    }
+
+    string cfg(char[,] arr, int numOfModules)
+    {
+        StringBuilder configuration = new StringBuilder();
+        int count = 0;
+        foreach (var c in arr)
+        {
+            configuration.Append(c);
+            if ((++count % (numOfModules)) == 0)
+                configuration.AppendLine();
+        }
+        return configuration.ToString();
+    }
+    void Start()
+	{
+        targetText.text = MakeConfiguration(5);
+
+        if (string.IsNullOrEmpty(targetString))
 		{
 			Debug.LogError("Target string is null or empty");
 			this.enabled = false;
